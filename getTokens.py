@@ -1,9 +1,11 @@
+from datetime import datetime,timedelta
 import requests
 import base64
 import json
 from dotenv import load_dotenv
-load_dotenv()  # load environment variables from .env
 import os
+load_dotenv()  # load environment variables from .env
+
 
 def get_tokens(code):
     # fetch variables
@@ -28,6 +30,10 @@ def get_tokens(code):
     if response.ok: # check response
         # Save the tokens to a json file in current directory
         tokens = response.json()
+        expires_in = tokens['expires_in']  # the duration in seconds until the token expires
+        expires_at = datetime.now() + timedelta(seconds=expires_in)  # calculate the exact time when the token expires
+        # Add the 'expires_at' field to the tokens dictionary
+        tokens['expires_at'] = expires_at.isoformat()
         with open('tokens.json', 'w') as f:
             json.dump(tokens, f, indent=4)
         print("Tokens stored in 'tokens.json'")
@@ -38,3 +44,7 @@ def get_tokens(code):
 
 code = os.getenv('SPOTIFY_AUTH_CODE') # newly retrieved auth code stored in .env
 get_tokens(code) # run the function
+
+
+ 
+        
