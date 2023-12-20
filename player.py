@@ -57,3 +57,65 @@ def get_access_token():
 ####### player.py logic - requests to Spotify API ########
 
 
+# Function to get the current playback state and device ID 
+def get_playback_state(access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    response = requests.get('https://api.spotify.com/v1/me/player', headers=headers)
+    if response.ok:
+        return response.json()  # Returns the current playback state information
+    else:
+        print("Failed to get current playback state:", response.text)
+        return None
+
+# Function to transfer playback to a different device ** not called if playback state = preferred
+def transfer_playback(device_id, access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    data = {
+        'device_ids': [device_id],
+        'play': True  # This ensures playback happens immediately after transfer
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player', headers=headers, json=data)
+    if response.status_code == 204:
+        print("Playback transferred to device with ID:", device_id)
+    else:
+        print("Failed to transfer playback:", response.text)
+        
+# Main function that encapsulates sound settings and song playback
+def sound_settings(track_uri, preferred_device_id='3e051197-ec49-4da9-94f7-82914d92b4f6_amzn_1'):
+    access_token = get_access_token() # Retrieve a valid access token
+    current_playback_state = get_playback_state(access_token) # Return the current playback state data
+    if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != preferred_device_id:
+        transfer_playback(preferred_device_id, access_token)
+    # After ensuring we're on the correct device, play the song
+    play_song(track_uri, access_token)
+
+# Function to play a song on Spotify using the track's URI
+def play_song(track_uri, access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    data = {
+        'uris': [track_uri]
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
+    if response.status_code == 204:
+        print("Playback started.")
+    else:
+        print("Failed to start playback:", response.text)
+
+
+# Call `sound_settings` with the track URI
+sound_settings('spotify:track:53xI80sTC0D7HaqieVEiDa')
+
+# ('spotify:track:53xI80sTC0D7HaqieVEiDa') ## song uri for 'grand slam'
+
+### FOR TOMORROW:
+# it only works if a song is player
+# it failed to transfer playback from my mac to alexa
+# start with visualizing logic (authentication flow) as i know it write know
