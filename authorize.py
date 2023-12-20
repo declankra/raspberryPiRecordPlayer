@@ -1,10 +1,28 @@
+import webbrowser
+
+from dotenv import load_dotenv
+load_dotenv()  # load environment variables from .env
+
+# Now you can import os and safely use the environment variables
+import os
 
 
-## Request user authorization
-CLIENT_ID = 'SPOTIFY_CLIENT_ID'
-SCOPE = 'SPOTIFY_SCOPE'  
-REDIRECT_URI = 'http://localhost:8888/callback'
-AUTH_URL = 'https://accounts.spotify.com/authorize'
+## Request user authorization variables
+client_id = os.getenv('SPOTIFY_CLIENT_ID')
+client_secret = os.getenv('SPOTIFY_SECRET_ID') 
+scope = os.getenv('SPOTIFY_SCOPE')
 
+redirect_uri = 'http://localhost:8888/callback'
+auth_url = 'https://accounts.spotify.com/authorize'
+response_type = 'code'
+
+## Send auth request url
 def get_auth_url():
-    return f"{AUTH_URL}?client_id={CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}"
+    url = f"{auth_url}?client_id={client_id}&response_type={response_type}&redirect_uri={redirect_uri}&scope={scope}"
+    return url
+
+print("Visit this URL to authorize:", get_auth_url())
+
+## visit auth url to get auth code
+webbrowser.open(get_auth_url())
+
