@@ -1,2 +1,3 @@
 # private spotify credentials
 .env
+tokens.json
