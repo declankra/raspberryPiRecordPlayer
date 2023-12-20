@@ -118,4 +118,5 @@ sound_settings('spotify:track:53xI80sTC0D7HaqieVEiDa')
 ### FOR TOMORROW:
 # it only works if a song is player
 # it failed to transfer playback from my mac to alexa
+    # possible reason: the alex is not on the same network... simple fix, answer: why is amazon echo not on network? can it be? if so, how can it be?
 # start with visualizing logic (authentication flow) as i know it write know
