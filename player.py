@@ -4,6 +4,8 @@ import base64
 import os
 from datetime import datetime, timedelta
 
+####### ACCESS TOKEN AND REFRESH TOKEN MECHANISM ########
+
 # access tokens from 'tokens.json'
 TOKENS_FILE = 'tokens.json'
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
@@ -50,8 +52,8 @@ def get_access_token():
         write_tokens_to_file(tokens)
     return access_token # return valid access token
 
-# The rest of your player.py logic would go here
+# now use 'access_token = get_access_token()' at the beginning of any requests to the Spotify API
 
-# Example usage:
-access_token = get_access_token()
-# Now you can use `access_token` to make requests to the Spotify API.
+####### player.py logic - requests to Spotify API ########
+
+
