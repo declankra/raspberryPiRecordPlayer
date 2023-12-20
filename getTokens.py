@@ -36,6 +36,5 @@ def get_tokens(code):
         print("Response Code:", response.status_code)
         print("Response Text:", response.text)
 
-
 code = os.getenv('SPOTIFY_AUTH_CODE') # newly retrieved auth code stored in .env
 get_tokens(code) # run the function
