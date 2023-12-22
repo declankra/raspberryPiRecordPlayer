@@ -1,9 +1,7 @@
+import subprocess
 import json
-import nfc
 from time import sleep
 
-# Function to read NFC tags with your ACR122U reader.
-# The function should return the tag's unique ID.
 
 #defunct function that used nfcpy library :(
 """def read_nfc_tag():
@@ -27,6 +25,23 @@ from time import sleep
         print("Tag is not NDEF formatted.")
         return None
     pass """
+# Function to read NFC tags with ACR122U reader.
+# The function should return the tag's unique ID with detailed print statements
+def read_nfc_tag():
+    try:
+        print("Starting NFC Tag read process...")
+        # Run the Node.js script and capture its output
+        output = subprocess.check_output(['node', 'readNfcTag.js'], universal_newlines=True)
+        tag_id = output.strip()  # Remove any extra whitespace
+        print(f"NFC Tag ID read successfully: {tag_id}")
+        return tag_id
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while reading the NFC tag: {e}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
 
 def get_vinyl_info(tag_id, vinyl_collection):
     for vinyl in vinyl_collection:
@@ -39,6 +54,7 @@ def id_to_mp3():
     vinyl_collection = json.load(open('vinylCollection.json'))
 
     while True:
+        print("successfully inside id_to_mp3() while loop")
         tag_id = read_nfc_tag()
         if tag_id and tag_id != last_tag_id:
             print("new tag recieved")
@@ -47,3 +63,6 @@ def id_to_mp3():
             if spotify_URI and URI_type:
                 return spotify_URI, URI_type
         sleep(1)  # Prevent tight loop if you want to continually check
+
+# testing call
+## spotify_URI, URI_type = id_to_mp3()
