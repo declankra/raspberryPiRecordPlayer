@@ -3,6 +3,7 @@ import json
 import base64
 import os
 from datetime import datetime, timedelta
+from refreshTokens import refresh_access_token # Import the refresh_access_token function from refreshTokens.py
 
 ####### ACCESS TOKEN AND REFRESH TOKEN MECHANISM ########
 
@@ -20,8 +21,8 @@ def write_tokens_to_file(tokens):
     with open(TOKENS_FILE, 'w') as file:
         json.dump(tokens, file, indent=4)
 
-# setup request for access token, using refresh token
-def refresh_access_token(refresh_token):
+# setup request for access token, using refresh token ** no longer needed -> it now references refresh_access_token() in refreshTokens.py
+"""def refresh_access_token(refresh_token):
     headers = {
         'Authorization': 'Basic ' + base64.b64encode(f'{client_id}:{client_secret}'.encode()).decode(),
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -38,9 +39,12 @@ def refresh_access_token(refresh_token):
         write_tokens_to_file(new_tokens)
         return new_tokens['access_token'], datetime.now() + timedelta(seconds=new_tokens['expires_in'])
     else:
+        print(f"Failed to refresh token, status code: {response.status_code}")
+        print(f"Response text: {response.text}")
         raise Exception("Could not refresh token")
+    """
 
-# function to request to new access token
+# function to request a new access token
 def get_access_token():
     tokens = read_tokens_from_file()
     access_token = tokens['access_token'] # fetch current access token data
@@ -52,7 +56,8 @@ def get_access_token():
         write_tokens_to_file(tokens)
     return access_token # return valid access token
 
-# now use 'access_token = get_access_token()' at the beginning of any requests to the Spotify API
+# !!! now use 'access_token = get_access_token()' at the beginning of any requests to the Spotify API
+
 
 ####### player.py logic - requests to Spotify API ########
 
@@ -86,7 +91,7 @@ def transfer_playback(device_id, access_token):
         print("Failed to transfer playback:", response.text)
         
 # Main function that encapsulates sound settings and song playback
-def sound_settings(track_uri, preferred_device_id='3e051197-ec49-4da9-94f7-82914d92b4f6_amzn_1'):
+def sound_settings(track_uri, preferred_device_id='3e051197-ec49-4da9-94f7-82914d92b4f6_amzn_1'): #set preferred device id
     access_token = get_access_token() # Retrieve a valid access token
     current_playback_state = get_playback_state(access_token) # Return the current playback state data
     if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != preferred_device_id:
@@ -116,7 +121,7 @@ sound_settings('spotify:track:53xI80sTC0D7HaqieVEiDa')
 # ('spotify:track:53xI80sTC0D7HaqieVEiDa') ## song uri for 'grand slam'
 
 ### FOR TOMORROW:
-# it only works if a song is player
+# it only works if a song is currently playing
 # it failed to transfer playback from my mac to alexa
     # possible reason: the alex is not on the same network... simple fix, answer: why is amazon echo not on network? can it be? if so, how can it be?
 # start with visualizing logic (authentication flow) as i know it write know

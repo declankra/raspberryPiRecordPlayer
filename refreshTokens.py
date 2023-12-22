@@ -42,6 +42,8 @@ def refresh_access_token(refresh_token):
         print("New access token stored with expiration time.")
         return token_data
     else:
+        print(f"Failed to refresh token, status code: {response.status_code}")
+        print(f"Response text: {response.text}")
         raise Exception("Could not refresh token", response.text)
 
 # Read the existing refresh token from tokens.json
