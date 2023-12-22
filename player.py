@@ -126,7 +126,9 @@ def play_song(track_uri, access_token):
 
 
 def mainRun():
-    id_to_mp3()
+    spotify_URI, URI_type = id_to_mp3()
+    if spotify_URI and URI_type:
+        sound_settings(spotify_URI, URI_type)
 
 mainRun() # call the main function when player.py is ran
 

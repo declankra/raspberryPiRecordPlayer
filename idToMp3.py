@@ -45,8 +45,3 @@ def id_to_mp3():
             if spotify_URI and URI_type:
                 return spotify_URI, URI_type
         sleep(1)  # Prevent tight loop if you want to continually check
-
-# Example usage
-# spotify_URI, URI_type = id_to_mp3()
-# if spotify_URI and URI_type:
-#     sound_settings(spotify_URI, URI_type)
