@@ -4,7 +4,9 @@ from time import sleep
 
 # Function to read NFC tags with your ACR122U reader.
 # The function should return the tag's unique ID.
-def read_nfc_tag():
+
+#defunct function that used nfcpy library :(
+"""def read_nfc_tag():
     clf = nfc.ContactlessFrontend('usb')
     
     print("Waiting for an NFC tag...")
@@ -24,7 +26,7 @@ def read_nfc_tag():
     else:
         print("Tag is not NDEF formatted.")
         return None
-    pass
+    pass """
 
 def get_vinyl_info(tag_id, vinyl_collection):
     for vinyl in vinyl_collection:
