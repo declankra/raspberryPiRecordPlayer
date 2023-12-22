@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from .env
 
 def refresh_access_token(refresh_token):
+    print("refresh_access_token function called")
+
     client_id = os.getenv('SPOTIFY_CLIENT_ID')
     client_secret = os.getenv('SPOTIFY_SECRET_ID')
 
@@ -51,4 +53,4 @@ with open('tokens.json', 'r') as f:
     token_data = json.load(f)
 
 # Refresh the access token using the existing refresh token
-refresh_access_token(token_data['refresh_token'])
+"""refresh_access_token(token_data['refresh_token'])""" #!!! do not need to run right now

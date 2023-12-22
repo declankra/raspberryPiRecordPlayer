@@ -50,12 +50,18 @@ def get_access_token():
     tokens = read_tokens_from_file()
     access_token = tokens['access_token'] # fetch current access token data
     expiration = datetime.fromisoformat(tokens['expires_at'])
-    if datetime.now() >= expiration: # check if access token has expired
+    current_time = datetime.now()
+    print(f"Current time: {current_time}")
+    print(f"Expiration time: {expiration}")
+    if current_time >= expiration: # check if access token has expired
+        print("Access token expired")
         access_token, expiration = refresh_access_token(tokens['refresh_token'])
         tokens['access_token'] = access_token
         tokens['expires_at'] = expiration.isoformat()
         write_tokens_to_file(tokens)
-    return access_token # return valid access token
+        return access_token
+    else:
+        return access_token # return valid access token
 
 # !!! now use 'access_token = get_access_token()' at the beginning of any requests to the Spotify API
 
