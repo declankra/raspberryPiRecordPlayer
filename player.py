@@ -4,6 +4,7 @@ import base64
 import os
 from datetime import datetime, timedelta
 from refreshTokens import refresh_access_token # Import the refresh_access_token function from refreshTokens.py
+from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .py file to run in mainRun() function
 
 ####### ACCESS TOKEN AND REFRESH TOKEN MECHANISM ########
 
@@ -123,11 +124,22 @@ def play_song(track_uri, access_token):
         print("Failed to start playback:", response.text)
 
 
+
+def mainRun():
+    id_to_mp3()
+
+mainRun() # call the main function when player.py is ran
+
+
 # Call `sound_settings` with the track URI
-sound_settings('spotify:track:53xI80sTC0D7HaqieVEiDa')
+## sound_settings('spotify:track:4zlbKky2yA657Sk5rekZoR')
 
-# ('spotify:track:53xI80sTC0D7HaqieVEiDa') ## song uri for 'grand slam'
 
-### FOR TOMORROW:
-# it only works if a song is currently playing ????? this may have changed??
-# start with visualizing logic (authentication flow) as i know it write know
+
+
+### NEXT UP ACTIONS / QUESTIONS:
+
+
+
+## REMEMBER 
+# continue to visualizing logic as i create it, it helps!!!
