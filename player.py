@@ -11,6 +11,7 @@ from refreshTokens import refresh_access_token # Import the refresh_access_token
 TOKENS_FILE = 'tokens.json'
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_SECRET_ID')
+choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID')
 
 def read_tokens_from_file():
     with open(TOKENS_FILE, 'r') as file:
@@ -91,8 +92,9 @@ def transfer_playback(device_id, access_token):
         print("Failed to transfer playback:", response.text)
         
 # Main function that encapsulates sound settings and song playback
-def sound_settings(track_uri, preferred_device_id='3e051197-ec49-4da9-94f7-82914d92b4f6_amzn_1'): #set preferred device id
+def sound_settings(track_uri, preferred_device_id=choosen_device): #set preferred device id
     access_token = get_access_token() # Retrieve a valid access token
+    """CHOOSDEVICE???"""
     current_playback_state = get_playback_state(access_token) # Return the current playback state data
     if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != preferred_device_id:
         transfer_playback(preferred_device_id, access_token)
@@ -121,7 +123,5 @@ sound_settings('spotify:track:53xI80sTC0D7HaqieVEiDa')
 # ('spotify:track:53xI80sTC0D7HaqieVEiDa') ## song uri for 'grand slam'
 
 ### FOR TOMORROW:
-# it only works if a song is currently playing
-# it failed to transfer playback from my mac to alexa
-    # possible reason: the alex is not on the same network... simple fix, answer: why is amazon echo not on network? can it be? if so, how can it be?
+# it only works if a song is currently playing ????? this may have changed??
 # start with visualizing logic (authentication flow) as i know it write know
