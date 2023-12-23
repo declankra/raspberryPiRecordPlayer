@@ -12,7 +12,7 @@ from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .p
 TOKENS_FILE = 'tokens.json'
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_SECRET_ID')
-choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID')
+choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID2') #set preferred device id
 
 def read_tokens_from_file():
     with open(TOKENS_FILE, 'r') as file:
@@ -73,7 +73,6 @@ def get_access_token():
 
 # Function to get the current playback state and device ID 
 def get_playback_state(access_token):
-    
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
@@ -86,16 +85,52 @@ def get_playback_state(access_token):
         return None
     else:
         print("Failed to get current playback state:", response.text)
-        return None
+        return exit()
         
-def transfer_playback_true(device_id, access_token):
+#function to START playing uri on SPECIFIC device
+def start_play(track_uri,track_type,access_token):
+    preferred_device=choosen_device
+    if track_type == 'song':
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json'
+        }
+        data = {
+            'uris': [track_uri]
+            
+        }
+        response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
+        if response.status_code == 204:
+            print("Playback started for song.")
+        else:
+            print("Failed to start playback for song:", response.text)
+    elif track_type == 'album' or track_type == 'playlist':
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json'
+        }
+        data = {
+            'context_uri': [track_uri]
+            
+        }
+        response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
+        if response.status_code == 204:
+            print("Playback started for album/playlist.")
+        else:
+            print("Failed to start playback for album/playlist:", response.text)
+    else:
+        print("track type not set correctly")
+        exit()
+
+def transfer_playback(access_token):
+    device_id = choosen_device
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
     data = {
         'device_ids': [device_id],
-        'play': True  # This ensures playback happens immediately after transfer
+        'play': True  # This ensures playback continues immediately after transfer
     }
     response = requests.put('https://api.spotify.com/v1/me/player', headers=headers, json=data)
     if response.status_code == 204:
@@ -103,28 +138,6 @@ def transfer_playback_true(device_id, access_token):
     else:
         print(f"Failed to transfer playback, status code: {response.status_code}")
         print(f"Response text: {response.text}")
-        
-
-        
-# Main function that encapsulates sound settings and song playback
-def sound_settings(track_uri, track_type): #set preferred device id
-    preferred_device_id=choosen_device
-    access_token = get_access_token() # Retrieve a valid access token
-    """CHOOSDEVICE???"""
-    
-    print("getting playback state")
-    current_playback_state = get_playback_state(access_token) # Return the current playback state data
-
-    #for state where song is playing
-    if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != preferred_device_id and current_playback_state.status_code ==200:
-        transfer_playback_true(preferred_device_id, access_token)
-        # after ensuring we're on the correct device, play the song
-        play_song(track_uri, access_token)
-    else:
-        start_song(track_uri,"3e051197-ec49-4da9-94f7-82914d92b4f6_amzn_1", access_token)
-    #for state where no song is playing
-    
-    
 
 # Function to play a song on Spotify using the track's URI
 def play_song(track_uri, access_token):
@@ -140,40 +153,60 @@ def play_song(track_uri, access_token):
         print("Playback started.")
     else:
         print("Failed to start playback:", response.text)
-
-
-def start_song(spotify_URI, device_id, access_token):
-    # Transfer playback to the specified device
-    endpoint_transfer = 'https://api.spotify.com/v1/me/player'
-    payload_transfer = {
-        'device_ids': [device_id],
-        'play': False
-    }
+        
+# Function to play an album/playlist on Spotify using the track's URI
+def play_context_uri(track_uri, access_token):
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
-    response_transfer = requests.put(endpoint_transfer, json=payload_transfer, headers=headers)
-    
-    if response_transfer.status_code in range(200, 299):
-        print("Playback transferred successfully. Starting song.")
-        # Start playing the song on the new device
-        endpoint_play = f'https://api.spotify.com/v1/me/player/play?device_id={device_id}'
-        payload_play = {
-            'uris': [spotify_URI]  # List of URIs to play
-        }
-        response_play = requests.put(endpoint_play, json=payload_play, headers=headers)
-        
-        if response_play.status_code in range(200, 299):
-            print("Song started playing successfully.")
-        else:
-            print(f"Failed to start song, status code: {response_play.status_code}")
-            print(f"Response text: {response_play.text}")
+    data = {
+        'context_uri': [track_uri]
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
+    if response.status_code == 204:
+        print("Playback started.")
     else:
-        print(f"Failed to transfer playback, status code: {response_transfer.status_code}")
-        print(f"Response text: {response_transfer.text}")
+        print("Failed to start playback:", response.text)       
+    
         
+# core logic function that encapsulates sound settings and song playback logic
+def sound_settings(track_uri, track_type):
+    access_token = get_access_token() # Retrieve a valid access token before proceeding to any further api calls
+    print("getting playback state")
+    current_playback_state = get_playback_state(access_token) # Return the current playback state data
+
+    #for state where an error was returned (/me/player = {else}) --> it already exited()....
+    #for state where nothing is playing (/me/player = 204)
+    if current_playback_state is None:
+        print("initiating sound")
+        start_play(track_uri,track_type,access_token)
         
+    #for state where something is playing ( /me/player = 200) BUT device is NOT correct
+    elif current_playback_state and current_playback_state.get('is_playing') == 'true' and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
+        print("transferring playback before playing")
+        transfer_playback(access_token)
+        print("now hitting play")
+        if track_type == 'song':
+            play_song(track_uri, access_token)
+        elif track_type == 'album' or track_type == 'playlist':
+            play_context_uri(track_uri, access_token)
+        else:
+            print("new song requested has incorrect track_type")
+    #for state where something is playing ( /me/player = 200) BUT device IS correct
+    elif current_playback_state and current_playback_state.get('is_playing') == 'true' and current_playback_state.get('device') and current_playback_state['device']['id'] == choosen_device:
+        print("device is already correct")
+        print("now hitting play")
+        if track_type == 'song':
+            play_song(track_uri, access_token)
+        elif track_type == 'album' or track_type == 'playlist':
+            play_context_uri(track_uri, access_token)
+        else:
+            print("new song requested has incorrect track_type")
+    else:
+        print("did not get caught in if else statements inside sound_settings")
+
+# main function
 def mainRun():
     #while: power is on??
     spotify_URI, URI_type = id_to_mp3()
@@ -217,3 +250,51 @@ mainRun() # call the main function when player.py is ran
 
 ## REMEMBER 
 # continue to visualizing logic as i create it, it helps!!!
+
+
+        
+        
+"""
+if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device and current_playback_state.status_code ==200:
+        transfer_playback_true(choosen_device, access_token)
+        # after ensuring we're on the correct device, play the song
+        play_song(track_uri, access_token)
+    else:
+        start_song(track_uri,choosen_device, access_token)
+    #for state where no song is playing
+    
+"""
+
+
+"""" archived code
+def start_song(spotify_URI, device_id, access_token):
+    # Transfer playback to the specified device
+    endpoint_transfer = 'https://api.spotify.com/v1/me/player'
+    payload_transfer = {
+        'device_ids': [device_id],
+        'play': False
+    }
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    response_transfer = requests.put(endpoint_transfer, json=payload_transfer, headers=headers)
+    
+    if response_transfer.status_code in range(200, 299):
+        print("Playback transferred successfully. Starting song.")
+        # Start playing the song on the new device
+        endpoint_play = f'https://api.spotify.com/v1/me/player/play?device_id={device_id}'
+        payload_play = {
+            'uris': [spotify_URI]  # List of URIs to play
+        }
+        response_play = requests.put(endpoint_play, json=payload_play, headers=headers)
+        
+        if response_play.status_code in range(200, 299):
+            print("Song started playing successfully.")
+        else:
+            print(f"Failed to start song, status code: {response_play.status_code}")
+            print(f"Response text: {response_play.text}")
+    else:
+        print(f"Failed to transfer playback, status code: {response_transfer.status_code}")
+        print(f"Response text: {response_transfer.text}")
+"""
