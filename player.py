@@ -190,7 +190,7 @@ mainRun() # call the main function when player.py is ran
 
 
 ### NEXT UP ACTIONS / QUESTIONS:
-    ## run through the logic ---- yeah just this... needs some code review. you've been at it for too long. but hell yeah. it fuckin works!!
+    ## run through the logic ---- yeah just this... needs some code review to handle all cases logically. you've been at it for too long. but hell yeah. it fuckin works!!
     
     
     
