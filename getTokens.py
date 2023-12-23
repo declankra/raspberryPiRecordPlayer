@@ -11,7 +11,7 @@ def get_tokens(code):
     # fetch variables
     client_id = os.getenv('SPOTIFY_CLIENT_ID')
     client_secret = os.getenv('SPOTIFY_SECRET_ID')
-    redirect_uri = 'http://localhost:8888/callback'
+    redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
    
     # create the header
     headers = {
