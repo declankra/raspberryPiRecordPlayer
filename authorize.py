@@ -11,8 +11,8 @@ import os
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_SECRET_ID') 
 scope = os.getenv('SPOTIFY_SCOPE')
+redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
 
-redirect_uri = 'http://localhost:8888/callback'
 auth_url = 'https://accounts.spotify.com/authorize'
 response_type = 'code'
 
