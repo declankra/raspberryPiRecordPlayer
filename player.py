@@ -93,6 +93,20 @@ def get_playback_state(access_token):
 #function to START playing uri on SPECIFIC device
 def start_play(track_uri,track_type,access_token):
     preferred_device=choosen_device
+     # Function to set the volume to 69%
+    def set_volume(volume_percent, device_id, token):
+        volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
+        volume_headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        volume_response = requests.put(volume_endpoint, headers=volume_headers)
+        return volume_response.status_code == 204
+
+    # Check and set volume
+    if not set_volume(69, preferred_device, access_token):
+        print("Failed to set volume")
+        return
+    
     if track_type == 'song':
         headers = {
             'Authorization': f'Bearer {access_token}',
