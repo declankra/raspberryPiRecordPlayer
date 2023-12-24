@@ -51,7 +51,7 @@ def read_nfc_tag():
         print("Starting NFC Tag read process...")
         # Run the Node.js script and capture its output
         process = subprocess.Popen(['node', 'readNfcTag.js'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate(timeout=10)  # Wait for 10 seconds for NFC read
+        output, error = process.communicate(timeout=10)  # Wait for 2 seconds for NFC read, then timeout
         if error:
             print(f"Error while reading NFC tag: {error.decode().strip()}")
             return None
@@ -92,6 +92,9 @@ def id_to_mp3(last_tag_id):
         print("URI: " + str(spotify_URI) + " Type: " + str(URI_type))
         if spotify_URI and URI_type:
             return spotify_URI, URI_type, tag_id
+    elif tag_id == None and tag_id != last_tag_id:
+        return None, None, None
+   ## print(last_tag_id)
     return None, None, last_tag_id
 
 
