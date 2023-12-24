@@ -221,16 +221,9 @@ def sound_settings(track_uri, track_type):
         print(current_playback_state)
         
 
-#main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
-"""def mainRun():
-    last_tag_id = None
-    while True:  # Infinite loop
-        spotify_URI, URI_type, new_tag_id = id_to_mp3(last_tag_id)
-        if spotify_URI and URI_type and new_tag_id != last_tag_id:
-            last_tag_id = new_tag_id  # Update the last tag ID
-            sound_settings(spotify_URI, URI_type)
-        sleep(1)  # Add a sleep to prevent an overly tight loop"""
         
+# main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
+# with potential to stop track if tag id returned = none
 def mainRun():
     last_tag_id = None
     while True:
@@ -250,7 +243,15 @@ try:
 except KeyboardInterrupt:
     print("Program stopped by user.")
     
-
+#main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
+"""def mainRun():
+    last_tag_id = None
+    while True:  # Infinite loop
+        spotify_URI, URI_type, new_tag_id = id_to_mp3(last_tag_id)
+        if spotify_URI and URI_type and new_tag_id != last_tag_id:
+            last_tag_id = new_tag_id  # Update the last tag ID
+            sound_settings(spotify_URI, URI_type)
+        sleep(1)  # Add a sleep to prevent an overly tight loop"""
 
 
 #archived main function loops
