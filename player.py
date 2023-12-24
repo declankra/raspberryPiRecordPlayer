@@ -1,3 +1,4 @@
+from time import sleep
 import requests
 import json
 import base64
@@ -56,9 +57,11 @@ def get_access_token():
     print(f"Expiration time: {expiration}")
     if current_time >= expiration: # check if access token has expired
         print("Access token expired")
-        access_token, expiration = refresh_access_token(tokens['refresh_token'])
+        token_data = refresh_access_token(tokens['refresh_token'])
+        access_token = token_data['access_token']  # Update the access token
+        expiration = token_data['expires_at']  # Update the expiration time
         tokens['access_token'] = access_token
-        tokens['expires_at'] = expiration.isoformat()
+        tokens['expires_at'] = expiration
         write_tokens_to_file(tokens)
         return access_token
     else:
@@ -181,9 +184,8 @@ def sound_settings(track_uri, track_type):
     if current_playback_state is None:
         print("initiating sound")
         start_play(track_uri,track_type,access_token)
-        
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
-    elif current_playback_state and current_playback_state.get('is_playing') == 'true' and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
+    elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
         print("transferring playback before playing")
         transfer_playback(access_token)
         print("now hitting play")
@@ -194,7 +196,7 @@ def sound_settings(track_uri, track_type):
         else:
             print("new song requested has incorrect track_type")
     #for state where something is playing ( /me/player = 200) BUT device IS correct
-    elif current_playback_state and current_playback_state.get('is_playing') == 'true' and current_playback_state.get('device') and current_playback_state['device']['id'] == choosen_device:
+    elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] == choosen_device:
         print("device is already correct")
         print("now hitting play")
         if track_type == 'song':
@@ -205,15 +207,41 @@ def sound_settings(track_uri, track_type):
             print("new song requested has incorrect track_type")
     else:
         print("did not get caught in if else statements inside sound_settings")
+        print(current_playback_state)
+        
 
-# main function
+#main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
+def mainRun():
+    last_tag_id = None
+    while True:  # Infinite loop
+        spotify_URI, URI_type, new_tag_id = id_to_mp3(last_tag_id)
+        if spotify_URI and URI_type and new_tag_id != last_tag_id:
+            last_tag_id = new_tag_id  # Update the last tag ID
+            sound_settings(spotify_URI, URI_type)
+        sleep(1)  # Add a sleep to prevent an overly tight loop
+
+
+
+#archived main function loops
+"""# main function
+def mainRun():
+    while True:  # Infinite loop
+        spotify_URI, URI_type = id_to_mp3()
+        if spotify_URI and URI_type:
+            sound_settings(spotify_URI, URI_type)
+try:
+    mainRun()
+except KeyboardInterrupt:
+    print("Program stopped by user.")"""
+    
+"""# main function
 def mainRun():
     #while: power is on??
     spotify_URI, URI_type = id_to_mp3()
     if spotify_URI and URI_type:
         sound_settings(spotify_URI, URI_type)
 
-mainRun() # call the main function when player.py is ran
+mainRun() # call the main function when player.py is ran"""
 
 
 # Call `sound_settings` with the track URI
