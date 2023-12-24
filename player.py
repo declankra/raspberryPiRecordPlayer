@@ -219,7 +219,10 @@ def mainRun():
             last_tag_id = new_tag_id  # Update the last tag ID
             sound_settings(spotify_URI, URI_type)
         sleep(1)  # Add a sleep to prevent an overly tight loop
-
+try:
+    mainRun()
+except KeyboardInterrupt:
+    print("Program stopped by user.")
 
 
 #archived main function loops
