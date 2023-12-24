@@ -170,8 +170,19 @@ def play_context_uri(track_uri, access_token):
     if response.status_code == 204:
         print("Playback started.")
     else:
-        print("Failed to start playback:", response.text)       
-    
+        print("Failed to start playback:", response.text)    
+        
+def stop_music(access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player/pause', headers=headers)
+    if response.status_code in [200, 204]:
+        print("Playback stopped.")
+    else:
+        print("Failed to stop playback:", response.status_code, response.text)
+   
         
 # core logic function that encapsulates sound settings and song playback logic
 def sound_settings(track_uri, track_type):
@@ -211,18 +222,35 @@ def sound_settings(track_uri, track_type):
         
 
 #main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
-def mainRun():
+"""def mainRun():
     last_tag_id = None
     while True:  # Infinite loop
         spotify_URI, URI_type, new_tag_id = id_to_mp3(last_tag_id)
         if spotify_URI and URI_type and new_tag_id != last_tag_id:
             last_tag_id = new_tag_id  # Update the last tag ID
             sound_settings(spotify_URI, URI_type)
-        sleep(1)  # Add a sleep to prevent an overly tight loop
+        sleep(1)  # Add a sleep to prevent an overly tight loop"""
+        
+def mainRun():
+    last_tag_id = None
+    while True:
+        spotify_URI, URI_type, tag_id = id_to_mp3(last_tag_id)
+        if tag_id != last_tag_id:
+            if spotify_URI and URI_type:
+                # A new tag is detected and it's different from the last tag
+                sound_settings(spotify_URI, URI_type)
+                last_tag_id = tag_id  # Update the last tag ID
+            elif tag_id is None:
+                # No tag is detected, potentially stop the music
+                stop_music(access_token = get_access_token())
+                last_tag_id = None
+        sleep(1)  # Sleep to prevent a tight loop
 try:
     mainRun()
 except KeyboardInterrupt:
     print("Program stopped by user.")
+    
+
 
 
 #archived main function loops
