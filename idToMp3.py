@@ -81,19 +81,6 @@ def get_vinyl_info(tag_id, vinyl_collection):
             return vinyl['spotify_URI'], vinyl['URI_type']
     return None, None
 
-def id_to_mp3(last_tag_id):
-    vinyl_collection = json.load(open('vinylCollection.json'))
-    while True:
-        print("inside id_to_mp3() while loop")
-        tag_id = read_nfc_tag()
-        if tag_id and tag_id != last_tag_id:
-            print("new tag recieved")
-            last_tag_id = tag_id
-            spotify_URI, URI_type = get_vinyl_info(tag_id, vinyl_collection)
-            print("URI: " + str(spotify_URI) + " Type:" + str(URI_type))
-            if spotify_URI and URI_type:
-                return spotify_URI, URI_type
-        sleep(1)  # Prevent tight loop if you want to continually check
 
 def id_to_mp3(last_tag_id):
     vinyl_collection = json.load(open('vinylCollection.json'))
@@ -108,6 +95,20 @@ def id_to_mp3(last_tag_id):
     return None, None, last_tag_id
 
 
+#archived id_to_mp3() call that didn't account for updated mainRun() loop
+"""def id_to_mp3(last_tag_id):
+    vinyl_collection = json.load(open('vinylCollection.json'))
+    while True:
+        print("inside id_to_mp3() while loop")
+        tag_id = read_nfc_tag()
+        if tag_id and tag_id != last_tag_id:
+            print("new tag recieved")
+            last_tag_id = tag_id
+            spotify_URI, URI_type = get_vinyl_info(tag_id, vinyl_collection)
+            print("URI: " + str(spotify_URI) + " Type:" + str(URI_type))
+            if spotify_URI and URI_type:
+                return spotify_URI, URI_type
+        sleep(1)  # Prevent tight loop if you want to continually check"""
 
 # testing call
 # spotify_URI, URI_type = id_to_mp3()
