@@ -51,7 +51,7 @@ def read_nfc_tag():
         print("Starting NFC Tag read process...")
         # Run the Node.js script and capture its output
         process = subprocess.Popen(['node', 'readNfcTag.js'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate(timeout=2)  # Wait for 1.5 seconds for NFC read, then timeout
+        output, error = process.communicate(timeout=2)  # Wait for 2 seconds for NFC read, then timeout
         if error:
             print(f"Error while reading NFC tag: {error.decode().strip()}")
             return None
