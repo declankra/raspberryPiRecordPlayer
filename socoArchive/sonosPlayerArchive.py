@@ -1,7 +1,37 @@
 import soco
-from soco.data_structures import ExamplePlaylistContainer, ExampeResource
 from soco.music_services import MusicService
+from soco.data_structures import DidlMusicTrack, DidlResource
 
+# Function to create a DIDL object for a Spotify track
+def create_spotify_track(uri):
+    resource = DidlResource(uri=uri, protocol_info="sonos.com-spotify:*:audio/x-spotify:*")
+    return DidlMusicTrack(title="Spotify Track", parent_id="0", item_id=uri, resources=[resource])
+
+# Function to play a track from Spotify URI
+def play_spotify_uri_on_sonos(uri):
+    # Connect to your Sonos speaker
+    device = soco.SoCo('10.0.0.167')  # Replace with your device's IP
+
+    # Clear the current queue
+    device.clear_queue()
+
+    # Create and add the track to the queue
+    track = create_spotify_track(uri)
+    device.add_to_queue(track)
+
+    # Play the first track in the queue
+    device.play_from_queue(0)
+
+# Example usage: Replace this part with your NFC tag scanning logic
+# This is where you would receive the Spotify URI from the NFC tag
+scanned_uri = 'spotify:track:53xI80sTC0D7HaqieVEiDa'
+play_spotify_uri_on_sonos(scanned_uri)
+
+
+
+
+
+""""
 # set device to your sonos speaker
 device = soco.SoCo('10.0.0.167') #Device: Family Room, IP: 10.0.0.167 
 # Get the Spotify music service
@@ -20,8 +50,7 @@ spotify_uri = 'spotify:track:53xI80sTC0D7HaqieVEiDa'
 
 queue = device.add_to_queue(spotify_uri)
 device.play_from_queue(queue)
-
-
+"""""
 
 """
 device.play() # Play
@@ -42,6 +71,7 @@ queue = device.get_queue() # retreive current queue
 for item in queue:
     print(item.title)
 
+device.clear_queue() # clear queue
 
 device.next()  # Skip to next track
 device.previous()  # Skip to previous track
