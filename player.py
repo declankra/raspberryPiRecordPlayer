@@ -57,9 +57,12 @@ def get_playback_state(access_token):
     response = requests.get('https://api.spotify.com/v1/me/player', headers=headers)
     if response.status_code == 200:
         print("something is playing")
-        return response.json()  # Returns the current playback state information
+        json_response = response.json()  # Convert to JSON
+        device_id = json_response["device"]["id"]
+        print(device_id)  # Print the device ID        
+        return json_response  # Return the playback state information
     elif response.status_code == 204:
-        print("nothing is currently playing")
+        print("nothing is currently playing")    
         return None
     else:
         print("Failed to get current playback state:", response.text)
@@ -69,7 +72,7 @@ def get_playback_state(access_token):
 def start_play(track_uri,track_type,access_token):
     preferred_device=choosen_device
     
-     # Function to set the volume to 69%
+     # Function to set the volume to 30%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
         volume_headers = {
@@ -91,7 +94,7 @@ def start_play(track_uri,track_type,access_token):
             print("Playback started for song.")
             shuffleModeOff(access_token) # ensure shuffle mode is off
             # Check and set volume
-            if not set_volume(69, preferred_device, access_token):
+            if not set_volume(30, preferred_device, access_token):
                 print("Failed to set volume")
                 return
         else:
@@ -112,6 +115,7 @@ def start_play(track_uri,track_type,access_token):
             if not set_volume(69, preferred_device, access_token):
                 print("Failed to set volume")
                 return
+            get_playback_state(access_token)
         else:
             print("Failed to start playback for album/playlist:", response.text)
     else:
