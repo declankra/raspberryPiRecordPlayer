@@ -13,7 +13,9 @@ from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .p
 TOKENS_FILE = 'tokens.json'
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_SECRET_ID')
-choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID1') #set preferred device id
+choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID_REAL') #set preferred device id
+choosen_device_trimmed = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID_TRIMMED') #set preferred device id
+
 
 def read_tokens_from_file():
     with open(TOKENS_FILE, 'r') as file:
@@ -64,15 +66,53 @@ def get_playback_state(access_token):
     elif response.status_code == 204:
         print("nothing is currently playing")    
         return None
+    elif response.status_code == 500:
+        print("500 server error")
+        return None
     else:
         print("Failed to get current playback state:", response.text)
         return exit()
         
 #function to START playing uri on SPECIFIC device
-def start_play(track_uri,track_type,access_token):
-    preferred_device=choosen_device
+def start_play(uri, access_token):
     
-     # Function to set the volume to 30%
+    shuffleStatus = False # initiate shuffle status
+    preferred_device=choosen_device_trimmed
+    print("choosed trimmed device")
+    headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json'
+        }
+    
+    if 'track' in uri:
+        track_type = "song"
+        print("uri type = " + track_type)
+        shuffleStatus = False # set shuffle status
+        data = {'uris': [uri]}  # For tracks
+    elif 'album' in uri or 'playlist' in uri:
+        track_type = "album/playlist"
+        print("uri type = " + track_type)
+        shuffleStatus = True # set shuffle status
+        data = {'context_uri': uri}  # For albums or playlists
+    else:
+        print("URI type not recognized")
+        return
+    # make request to /player/play/ with device id
+    response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
+    if response.status_code == 204:
+        print("Playback started successfully for " + track_type)
+    else:
+        print(f"Failed to start playback: {response.status_code} - {response.text}")
+    
+    get_playback_state(access_token)
+    
+    # Check and set shuffle 
+    if shuffleStatus == True:
+        shuffleModeOn(access_token) # activate shuffle
+    elif shuffleStatus == False:
+        shuffleModeOff(access_token) # ensure shuffle mode is off
+    
+    # Function to set the volume to 30%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
         volume_headers = {
@@ -80,14 +120,21 @@ def start_play(track_uri,track_type,access_token):
         }
         volume_response = requests.put(volume_endpoint, headers=volume_headers)
         return volume_response.status_code == 204
-    
+    # Check and set volume
+    if not set_volume(30, preferred_device, access_token):
+        print("Failed to set volume")
+        return
+
+    get_playback_state(access_token)
+
+""""
     if track_type == 'song':
         headers = {
             'Authorization': f'Bearer {access_token}',
             'Content-Type': 'application/json'
         }
         data = {
-            'uris': [track_uri]
+            'uris': [uri]
         }
         response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
         if response.status_code == 204:
@@ -106,7 +153,7 @@ def start_play(track_uri,track_type,access_token):
             'Content-Type': 'application/json'
         }
         data = {
-        "context_uri": track_uri
+        "context_uri": uri
         }
         response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
         if response.status_code == 204:
@@ -122,9 +169,11 @@ def start_play(track_uri,track_type,access_token):
     else:
         print("track type not set correctly")
         exit()
+"""
 
 def transfer_playback(access_token):
     device_id = choosen_device
+    print("transferring to real device")
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
@@ -219,8 +268,9 @@ def sound_settings(track_uri, track_type):
     #for state where nothing is playing (/me/player = 204)
     if current_playback_state is None:
         print("initiating sound")
-        transfer_playback(access_token) # FIX!!! this ensures playback is transferred to correct device AND play = TRUE, BEFORE making a play call (should resolve amazon device going to sleep issue)
-        start_play(track_uri,track_type,access_token)
+        #transfer_playback(access_token) # FIX!!! this ensures playback is transferred to correct device AND play = TRUE, BEFORE making a play call (should resolve amazon device going to sleep issue)
+        start_play(track_uri, access_token) # !!! ON TRIMMED
+        transfer_playback(access_token) # transfer to REAL
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
         print("transferring playback before playing")
