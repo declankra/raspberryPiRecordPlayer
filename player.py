@@ -97,6 +97,17 @@ def start_play(uri, access_token):
     else:
         print("URI type not recognized")
         return
+    
+    ### TRY SHUFFLE BEFORE ???
+     # Check and set shuffle 
+    if shuffleStatus == True:
+        shuffleModeOn(access_token) # activate shuffle
+    elif shuffleStatus == False:
+        shuffleModeOff(access_token) # ensure shuffle mode is off
+    
+    get_playback_state(access_token)
+
+    
     # make request to /player/play/ with device id
     response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
     if response.status_code == 204:
@@ -105,13 +116,8 @@ def start_play(uri, access_token):
         print(f"Failed to start playback: {response.status_code} - {response.text}")
     
     get_playback_state(access_token)
-    
-    # Check and set shuffle 
-    if shuffleStatus == True:
-        shuffleModeOn(access_token) # activate shuffle
-    elif shuffleStatus == False:
-        shuffleModeOff(access_token) # ensure shuffle mode is off
-    
+
+   
     # Function to set the volume to 30%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
