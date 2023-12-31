@@ -97,6 +97,7 @@ def start_play(track_uri,track_type,access_token):
             if not set_volume(30, preferred_device, access_token):
                 print("Failed to set volume")
                 return
+            get_playback_state(access_token)
         else:
             print("Failed to start playback for song:", response.text)
     elif track_type == 'album' or track_type == 'playlist':
