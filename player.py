@@ -102,8 +102,7 @@ def start_play(track_uri,track_type,access_token):
             'Content-Type': 'application/json'
         }
         data = {
-            'context_uri': [track_uri]
-            
+        "context_uri": track_uri
         }
         response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
         if response.status_code == 204:
@@ -155,7 +154,7 @@ def play_context_uri(track_uri, access_token):
         'Content-Type': 'application/json'
     }
     data = {
-        'context_uri': [track_uri]
+        "context_uri": track_uri
     }
     response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
     if response.status_code == 204:
@@ -214,18 +213,21 @@ def sound_settings(track_uri, track_type):
         transfer_playback(access_token)
         print("now hitting play")
         if track_type == 'song':
+            print("type = song")
             play_song(track_uri, access_token)
         elif track_type == 'album' or track_type == 'playlist':
+            print("type = album/playlist")
             play_context_uri(track_uri, access_token)
         else:
             print("new song requested has incorrect track_type")
     #for state where something is playing ( /me/player = 200) BUT device IS correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] == choosen_device:
         print("device is already correct")
-        print("now hitting play")
         if track_type == 'song':
+            print("hitting play & type = song")
             play_song(track_uri, access_token)
         elif track_type == 'album' or track_type == 'playlist':
+            print("hitting play & type = playlist/album")
             play_context_uri(track_uri, access_token)
         else:
             print("new song requested has incorrect track_type")
