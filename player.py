@@ -24,29 +24,6 @@ def write_tokens_to_file(tokens):
     with open(TOKENS_FILE, 'w') as file:
         json.dump(tokens, file, indent=4)
 
-# setup request for access token, using refresh token ** no longer needed -> it now references refresh_access_token() in refreshTokens.py
-"""def refresh_access_token(refresh_token):
-    headers = {
-        'Authorization': 'Basic ' + base64.b64encode(f'{client_id}:{client_secret}'.encode()).decode(),
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    data = {
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token
-    }
-    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
-    
-    if response.ok: # check if response works, to re-write tokens.json
-        new_tokens = response.json()
-        new_tokens['refresh_token'] = refresh_token  # Reuse the same refresh token
-        write_tokens_to_file(new_tokens)
-        return new_tokens['access_token'], datetime.now() + timedelta(seconds=new_tokens['expires_in'])
-    else:
-        print(f"Failed to refresh token, status code: {response.status_code}")
-        print(f"Response text: {response.text}")
-        raise Exception("Could not refresh token")
-    """
-
 # function to request a new access token
 def get_access_token():
     tokens = read_tokens_from_file()
@@ -70,9 +47,7 @@ def get_access_token():
 
 # !!! now use 'access_token = get_access_token()' at the beginning of any requests to the Spotify API
 
-
 ####### player.py logic - requests to Spotify API ########
-
 
 # Function to get the current playback state and device ID 
 def get_playback_state(access_token):
@@ -167,7 +142,7 @@ def play_song(track_uri, access_token):
     }
     response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
     if response.status_code == 204:
-        print("Playback started.")
+        print("Playing song")
     else:
         print("Failed to start playback:", response.text)
         
@@ -182,7 +157,7 @@ def play_context_uri(track_uri, access_token):
     }
     response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
     if response.status_code == 204:
-        print("Playback started.")
+        print("Playing playlist/album")
     else:
         print("Failed to start playback:", response.text)    
         
@@ -232,143 +207,27 @@ def sound_settings(track_uri, track_type):
             print("new song requested has incorrect track_type")
     else:
         print("did not get caught in if else statements inside sound_settings")
-        print(current_playback_state)
+        print(current_playback_state) # print playback state for debugging
         
 
         
-# main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
+# main function loops the call to idToMp3 and checks if new id = true before calling sound_settings()
 # with potential to stop track if tag id returned = none
 def mainRun():
-    last_tag_id = None
-    while True:
-        spotify_URI, URI_type, tag_id = id_to_mp3(last_tag_id)
-        if tag_id != last_tag_id:
-            if spotify_URI and URI_type:
+    last_tag_id = None # set initial state
+    while True: # infinite loop
+        spotify_URI, URI_type, tag_id = id_to_mp3(last_tag_id) # call function with last tag id
+        if tag_id != last_tag_id: # check if tag id returned is new
+            if spotify_URI and URI_type: # check if other variables are valid i.e. != none >>> if tag_id = none then these should be valid
                 # A new tag is detected and it's different from the last tag
-                sound_settings(spotify_URI, URI_type)
-                last_tag_id = tag_id  # Update the last tag ID
-            elif tag_id is None:
-                # No tag is detected, potentially stop the music
+                sound_settings(spotify_URI, URI_type) # call sound settings with uri & type
+                last_tag_id = tag_id  # Update last tag id to the valid tag id that was just used
+            elif tag_id is None: # validation check that tag_id is none (given it is already different)
+                # No tag is detected >> stop the music
                 stop_music(access_token = get_access_token())
-                last_tag_id = None
+                last_tag_id = None # set last tag id to the none tag id that was just used
         sleep(1)  # Sleep to prevent a tight loop
 try:
     mainRun()
 except KeyboardInterrupt:
     print("Program stopped by user.")
-    
-#main function loops the call to idToMp3 and checks if new = true before calling sound_settings()
-"""def mainRun():
-    last_tag_id = None
-    while True:  # Infinite loop
-        spotify_URI, URI_type, new_tag_id = id_to_mp3(last_tag_id)
-        if spotify_URI and URI_type and new_tag_id != last_tag_id:
-            last_tag_id = new_tag_id  # Update the last tag ID
-            sound_settings(spotify_URI, URI_type)
-        sleep(1)  # Add a sleep to prevent an overly tight loop"""
-
-
-#archived main function loops
-"""# main function
-def mainRun():
-    while True:  # Infinite loop
-        spotify_URI, URI_type = id_to_mp3()
-        if spotify_URI and URI_type:
-            sound_settings(spotify_URI, URI_type)
-try:
-    mainRun()
-except KeyboardInterrupt:
-    print("Program stopped by user.")"""
-    
-"""# main function
-def mainRun():
-    #while: power is on??
-    spotify_URI, URI_type = id_to_mp3()
-    if spotify_URI and URI_type:
-        sound_settings(spotify_URI, URI_type)
-
-mainRun() # call the main function when player.py is ran"""
-
-
-# Call `sound_settings` with the track URI
-## sound_settings('spotify:track:4zlbKky2yA657Sk5rekZoR')
-
-
-
-
-### NEXT UP ACTIONS / QUESTIONS:
-    ## run through the logic ---- yeah just this... needs some code review to handle all cases logically. you've been at it for too long. but hell yeah. it fuckin works!!
-    
-    
-    
-        #areas to address
-            #how to handle when it is not playing
-                #get play backstate = 204 or is_playing = false
-            #how to best set the logic flow within sound_settings()
-                #what should be checked first? why?
-                    #is something playing? y/n
-                        #if n->
-                            #start playing
-                            #check if device is correct
-                        #if y->
-                            #continue
-                    #is it playing on correct device? y/n
-                        #if n->
-                            #switch to correct device
-                        #if y -> 
-                            #continue
-        
-    #then the bigger problem -> dont let it exit after it plays a song "playback started"                
-                
-
-
-## REMEMBER 
-# continue to visualizing logic as i create it, it helps!!!
-
-
-        
-        
-"""
-if current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device and current_playback_state.status_code ==200:
-        transfer_playback_true(choosen_device, access_token)
-        # after ensuring we're on the correct device, play the song
-        play_song(track_uri, access_token)
-    else:
-        start_song(track_uri,choosen_device, access_token)
-    #for state where no song is playing
-    
-"""
-
-
-"""" archived code
-def start_song(spotify_URI, device_id, access_token):
-    # Transfer playback to the specified device
-    endpoint_transfer = 'https://api.spotify.com/v1/me/player'
-    payload_transfer = {
-        'device_ids': [device_id],
-        'play': False
-    }
-    headers = {
-        'Authorization': f'Bearer {access_token}',
-        'Content-Type': 'application/json'
-    }
-    response_transfer = requests.put(endpoint_transfer, json=payload_transfer, headers=headers)
-    
-    if response_transfer.status_code in range(200, 299):
-        print("Playback transferred successfully. Starting song.")
-        # Start playing the song on the new device
-        endpoint_play = f'https://api.spotify.com/v1/me/player/play?device_id={device_id}'
-        payload_play = {
-            'uris': [spotify_URI]  # List of URIs to play
-        }
-        response_play = requests.put(endpoint_play, json=payload_play, headers=headers)
-        
-        if response_play.status_code in range(200, 299):
-            print("Song started playing successfully.")
-        else:
-            print(f"Failed to start song, status code: {response_play.status_code}")
-            print(f"Response text: {response_play.text}")
-    else:
-        print(f"Failed to transfer playback, status code: {response_transfer.status_code}")
-        print(f"Response text: {response_transfer.text}")
-"""
