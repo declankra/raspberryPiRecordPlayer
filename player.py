@@ -98,7 +98,7 @@ def start_play(uri, access_token):
         print("URI type not recognized")
         return
     
-    ### TRY SHUFFLE BEFORE ???
+    ### ??? TRY SHUFFLE BEFORE PUT REQUEST???
      # Check and set shuffle 
     if shuffleStatus == True:
         shuffleModeOn(access_token) # activate shuffle
