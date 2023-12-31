@@ -89,11 +89,11 @@ def start_play(track_uri,track_type,access_token):
         }
         data = {
             'uris': [track_uri]
-            
         }
         response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
         if response.status_code == 204:
             print("Playback started for song.")
+            shuffleModeOff(access_token) # ensure shuffle mode is off
         else:
             print("Failed to start playback for song:", response.text)
     elif track_type == 'album' or track_type == 'playlist':
@@ -108,6 +108,7 @@ def start_play(track_uri,track_type,access_token):
         response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
         if response.status_code == 204:
             print("Playback started for album/playlist.")
+            shuffleModeOn(access_token) # activate shuffle
         else:
             print("Failed to start playback for album/playlist:", response.text)
     else:
@@ -143,6 +144,7 @@ def play_song(track_uri, access_token):
     response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
     if response.status_code == 204:
         print("Playing song")
+        shuffleModeOff(access_token) # ensure shuffle mode is off
     else:
         print("Failed to start playback:", response.text)
         
@@ -158,6 +160,7 @@ def play_context_uri(track_uri, access_token):
     response = requests.put('https://api.spotify.com/v1/me/player/play', headers=headers, json=data)
     if response.status_code == 204:
         print("Playing playlist/album")
+        shuffleModeOn(access_token) # activate shuffle
     else:
         print("Failed to start playback:", response.text)    
         
@@ -171,7 +174,28 @@ def stop_music(access_token):
         print("Playback stopped.")
     else:
         print("Failed to stop playback:", response.status_code, response.text)
-   
+        
+def shuffleModeOn(access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player/shuffle?state=true', headers=headers)
+    if response.status_code == 204:
+        print("Shuffle = TRUE")
+    else:
+        print("Failed to shuffle playback:", response.text)
+        
+def shuffleModeOff(access_token):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.put('https://api.spotify.com/v1/me/player/shuffle?state=false', headers=headers)
+    if response.status_code == 204:
+        print("Shuffle = FALSE")
+    else:
+        print("Failed to NOT shuffle playback:", response.text)
         
 # core logic function that encapsulates sound settings and song playback logic
 def sound_settings(track_uri, track_type):

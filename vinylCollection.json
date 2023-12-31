@@ -12,16 +12,11 @@
         "vinyl_name": "baby again.."
     },
     {
-        "vinyl_name": "XX - Bruce",
-        "tag_id": "XX",
-        "spotify_URI": "",
-        "URI_type": "album"
-    },
-    {
-        "vinyl_name": "flow state type beat",
-        "tag_id": "XX",
-        "spotify_URI": "",
-        "URI_type": "playlist"
+        
+        "tag_id": "041c1e0c000001",
+        "spotify_URI": "spotify:playlist:7lm0xMLRiFr4vEa6kVBrae",
+        "URI_type": "playlist",
+        "vinyl_name": "flow state type beat"
     }
 
 ]
