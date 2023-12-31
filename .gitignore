@@ -5,3 +5,5 @@ tokens.json
 __pycache__/
 *.py[cod]
 *$py.class
+# test file
+test.py
