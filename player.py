@@ -68,6 +68,7 @@ def get_playback_state(access_token):
 #function to START playing uri on SPECIFIC device
 def start_play(track_uri,track_type,access_token):
     preferred_device=choosen_device
+    
      # Function to set the volume to 69%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
@@ -76,11 +77,6 @@ def start_play(track_uri,track_type,access_token):
         }
         volume_response = requests.put(volume_endpoint, headers=volume_headers)
         return volume_response.status_code == 204
-
-    # Check and set volume
-    if not set_volume(69, preferred_device, access_token):
-        print("Failed to set volume")
-        return
     
     if track_type == 'song':
         headers = {
@@ -94,6 +90,10 @@ def start_play(track_uri,track_type,access_token):
         if response.status_code == 204:
             print("Playback started for song.")
             shuffleModeOff(access_token) # ensure shuffle mode is off
+            # Check and set volume
+            if not set_volume(69, preferred_device, access_token):
+                print("Failed to set volume")
+                return
         else:
             print("Failed to start playback for song:", response.text)
     elif track_type == 'album' or track_type == 'playlist':
@@ -108,6 +108,10 @@ def start_play(track_uri,track_type,access_token):
         if response.status_code == 204:
             print("Playback started for album/playlist.")
             shuffleModeOn(access_token) # activate shuffle
+             # Check and set volume
+            if not set_volume(69, preferred_device, access_token):
+                print("Failed to set volume")
+                return
         else:
             print("Failed to start playback for album/playlist:", response.text)
     else:
@@ -146,6 +150,8 @@ def play_song(track_uri, access_token):
         shuffleModeOff(access_token) # ensure shuffle mode is off
     else:
         print("Failed to start playback:", response.text)
+
+        
         
 # Function to play an album/playlist on Spotify using the track's URI
 def play_context_uri(track_uri, access_token):
@@ -179,7 +185,8 @@ def shuffleModeOn(access_token):
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
-    response = requests.put('https://api.spotify.com/v1/me/player/shuffle?state=true', headers=headers)
+    url = f'https://api.spotify.com/v1/me/player/shuffle?state=true&device_id={choosen_device}'  # Use f-string for URL
+    response = requests.put(url, headers=headers)
     if response.status_code == 204:
         print("Shuffle = TRUE")
     else:
@@ -190,7 +197,8 @@ def shuffleModeOff(access_token):
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
-    response = requests.put('https://api.spotify.com/v1/me/player/shuffle?state=false', headers=headers)
+    url = f'https://api.spotify.com/v1/me/player/shuffle?state=false&device_id={choosen_device}'  # Use f-string for URL
+    response = requests.put(url, headers=headers)
     if response.status_code == 204:
         print("Shuffle = FALSE")
     else:
