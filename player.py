@@ -112,7 +112,7 @@ def start_play(track_uri,track_type,access_token):
             print("Playback started for album/playlist.")
             shuffleModeOn(access_token) # activate shuffle
              # Check and set volume
-            if not set_volume(69, preferred_device, access_token):
+            if not set_volume(30, preferred_device, access_token):
                 print("Failed to set volume")
                 return
             get_playback_state(access_token)
