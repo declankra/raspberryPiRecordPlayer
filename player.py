@@ -214,6 +214,7 @@ def sound_settings(track_uri, track_type):
     #for state where nothing is playing (/me/player = 204)
     if current_playback_state is None:
         print("initiating sound")
+        transfer_playback(access_token) # FIX!!! this ensures playback is transferred to correct device AND play = TRUE, BEFORE making a play call (should resolve amazon device going to sleep issue)
         start_play(track_uri,track_type,access_token)
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
