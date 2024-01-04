@@ -2,7 +2,7 @@
   "name": "raspberrypirecordplayer",
   "version": "1.0.0",
   "description": "the original raspberry pi record player project that plays music through a spotify connected device",
-  "main": "readNfcTag.js",
+  "main": "player.py",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/declankra/raspberryPiRecordPlayer/issues"
   },
-  "homepage": "https://github.com/declankra/raspberryPiRecordPlayer#readme",
-  "dependencies": {
-    "nfc-pcsc": "^0.8.1"
-  }
+  "homepage": "https://github.com/declankra/raspberryPiRecordPlayer#readme"
 }
