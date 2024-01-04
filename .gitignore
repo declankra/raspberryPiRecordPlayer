@@ -8,3 +8,4 @@ __pycache__/
 # test file
 test.py
 test.js
+node_modules
