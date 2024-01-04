@@ -60,8 +60,8 @@ def get_playback_state(access_token):
     if response.status_code == 200:
         print("something is playing")
         json_response = response.json()  # Convert to JSON
-        device_id = json_response["device"]["id"]
-        print(device_id)  # Print the device ID        
+        #device_id = json_response["device"]["id"]
+        #print(device_id)  # Print the device ID        
         return json_response  # Return the playback state information
     elif response.status_code == 204:
         print("nothing is currently playing")    
@@ -74,11 +74,11 @@ def get_playback_state(access_token):
         return exit()
         
 #function to START playing uri on SPECIFIC device
-def start_play(uri, access_token):
+def start_play(uri, access_token, device):
     
     shuffleStatus = False # initiate shuffle status
-    preferred_device=choosen_device_trimmed
-    print("choosed trimmed device")
+    preferred_device=device
+    print("device type = " + preferred_device)
     headers = {
             'Authorization': f'Bearer {access_token}',
             'Content-Type': 'application/json'
@@ -104,11 +104,8 @@ def start_play(uri, access_token):
         print("Playback started successfully for " + track_type)
     else:
         print(f"Failed to start playback: {response.status_code} - {response.text}")
-    
-    get_playback_state(access_token)
-
    
-    ### ??? TRY SHUFFLE BEFORE VOLUME REQUEST???
+    ### SHUFFLE BEFORE VOLUME REQUEST ###
      # Check and set shuffle 
     if shuffleStatus == True:
         shuffleModeOn(access_token) # activate shuffle
@@ -117,7 +114,7 @@ def start_play(uri, access_token):
     
     get_playback_state(access_token)
 
-    # Function to set the volume to 30%
+    # Function to set the volume to 50%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
         volume_headers = {
@@ -126,55 +123,9 @@ def start_play(uri, access_token):
         volume_response = requests.put(volume_endpoint, headers=volume_headers)
         return volume_response.status_code == 204
     # Check and set volume
-    if not set_volume(30, preferred_device, access_token):
+    if not set_volume(50, preferred_device, access_token):
         print("Failed to set volume")
         return
-
-    get_playback_state(access_token)
-
-""""
-    if track_type == 'song':
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json'
-        }
-        data = {
-            'uris': [uri]
-        }
-        response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
-        if response.status_code == 204:
-            print("Playback started for song.")
-            shuffleModeOff(access_token) # ensure shuffle mode is off
-            # Check and set volume
-            if not set_volume(30, preferred_device, access_token):
-                print("Failed to set volume")
-                return
-            get_playback_state(access_token)
-        else:
-            print("Failed to start playback for song:", response.text)
-    elif track_type == 'album' or track_type == 'playlist':
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json'
-        }
-        data = {
-        "context_uri": uri
-        }
-        response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
-        if response.status_code == 204:
-            print("Playback started for album/playlist.")
-            shuffleModeOn(access_token) # activate shuffle
-             # Check and set volume
-            if not set_volume(30, preferred_device, access_token):
-                print("Failed to set volume")
-                return
-            get_playback_state(access_token)
-        else:
-            print("Failed to start playback for album/playlist:", response.text)
-    else:
-        print("track type not set correctly")
-        exit()
-"""
 
 def transfer_playback(access_token):
     device_id = choosen_device
@@ -228,6 +179,7 @@ def play_context_uri(track_uri, access_token):
     else:
         print("Failed to start playback:", response.text)    
         
+# Function to pause playback
 def stop_music(access_token):
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -238,7 +190,8 @@ def stop_music(access_token):
         print("Playback stopped.")
     else:
         print("Failed to stop playback:", response.status_code, response.text)
-        
+
+# Function to turn on shuffle
 def shuffleModeOn(access_token):
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -250,7 +203,8 @@ def shuffleModeOn(access_token):
         print("Shuffle = TRUE")
     else:
         print("Failed to shuffle playback:", response.text)
-        
+
+# Function to turn off shuffle
 def shuffleModeOff(access_token):
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -273,12 +227,12 @@ def sound_settings(track_uri, track_type):
     #for state where nothing is playing (/me/player = 204)
     if current_playback_state is None:
         print("initiating sound")
-        #transfer_playback(access_token) # FIX!!! this ensures playback is transferred to correct device AND play = TRUE, BEFORE making a play call (should resolve amazon device going to sleep issue)
-        start_play(track_uri, access_token) # !!! ON TRIMMED
+        start_play(track_uri, access_token, choosen_device_trimmed) # !!! ON TRIMMED AMZN ID
         transfer_playback(access_token) # transfer to REAL
+        start_play(track_uri, access_token, choosen_device) # !!! ON REAL AMZN ID
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
-        print("transferring playback before playing")
+        print("transferring playback before initiating sound")
         transfer_playback(access_token)
         print("now hitting play")
         if track_type == 'song':
