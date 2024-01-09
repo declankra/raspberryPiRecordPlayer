@@ -1,22 +1,271 @@
 [
     {
-        "tag_id": "04151e5fb62a81",
-        "spotify_URI": "spotify:track:53xI80sTC0D7HaqieVEiDa",
-        "URI_type": "song",
-        "vinyl_name": "grand slam"
+        "tag_id": "048c613dbb2a81",
+        "spotify_URI": "spotify:track:0Ftrkz2waaHcjKb4qYvLmz",
+        "URI_type": "song"
     },
     {
-        "tag_id": "04141e5fb62a81",
-        "spotify_URI": "spotify:track:4zlbKky2yA657Sk5rekZoR",
-        "URI_type": "song",
-        "vinyl_name": "baby again.."
+        "tag_id": "0462613dbb2a81",
+        "spotify_URI": "spotify:playlist:4xUAqgNJMfjHioE8nCbkqQ",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "047d613dbb2a81",
+        "spotify_URI": "spotify:playlist:2dReiYujjPPlgcdRhms7YF",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "048e613dbb2a81",
+        "spotify_URI": "spotify:playlist:6SJ6iFV7lBBc7ipEHrn971",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0465613dbb2a81",
+        "spotify_URI": "spotify:playlist:1SU5FFPgSwYMhej4P9kte4",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0448613dbb2a81",
+        "spotify_URI": "spotify:playlist:3hKwPRV6t22dRiZWrNmNIA",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "046d613dbb2a81",
+        "spotify_URI": "spotify:track:6Ao5d7TMQ92h87jQqSHGyw",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0459613dbb2a81",
+        "spotify_URI": "spotify:track:4XeIiGpUBshIfs9yrBDVZC",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04c7140c000001",
+        "spotify_URI": "spotify:track:7bYZBVrnRfqeaPbhRyEvK3",
+        "URI_type": "song"
+    }, {
+        "tag_id": "0474613dbb2a81",
+        "spotify_URI": "spotify:track:4y5bvROuBDPr5fuwXbIBZR",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0484613dbb2a81",
+        "spotify_URI": "spotify:playlist:6H37VRidxQ7i2VRTjFELyB",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "047e613dbb2a81",
+        "spotify_URI": "spotify:playlist:1Csy9xLjSepTjGzg6duI5e",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "0475613dbb2a81",
+        "spotify_URI": "spotify:track:15vzANxN8G9wWfwAJLLMCg",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "046a613dbb2a81",
+        "spotify_URI": "spotify:track:0TyGh27YQ5LknmiDhCzJiT",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0451613dbb2a81",
+        "spotify_URI": "spotify:playlist:5N14oRsqc8g74qtkFnAxF5",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "043f613dbb2a81",
+        "spotify_URI": "spotify:playlist:4JqT9Ehuos01EOO8IFgkqw",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "048d613dbb2a81",
+        "spotify_URI": "spotify:playlist:02NLf38vf4rUB6VpUsEm49",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "048f613dbb2a81",
+        "spotify_URI": "spotify:playlist:0dVBliyWOlSBxp6LW9TaZ4",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "046b613dbb2a81",
+        "spotify_URI": "spotify:playlist:1tTmORcV7MQrYtbbKJhP98",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0463613dbb2a81",
+        "spotify_URI": "spotify:playlist:3Ob4UHdLXyCAYMg7VwSBBD",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "044b613dbb2a81",
+        "spotify_URI": "spotify:playlist:1XFcaD1M787FO2vKbQmAz9",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "0473613dbb2a81",
+        "spotify_URI": "spotify:playlist:7jEBssUXXTvzNQhyX2r6LS",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "046c613dbb2a81",
+        "spotify_URI": "spotify:playlist:3WpRTWDnZzvmjhCnzjoGAt",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0464613dbb2a81",
+        "spotify_URI": "spotify:playlist:3Hn7ztpWfllMmWfUxYaaMY",
+        "URI_type": "playlist"
+    }, {
+        "tag_id": "0485613dbb2a81",
+        "spotify_URI": "spotify:track:3z7kvwJVRfA4HCOfm9ngog",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0487613dbb2a81",
+        "spotify_URI": "spotify:track:6u9RqxALwkjJ1ukB1y8vuP",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "047b613dbb2a81",
+        "spotify_URI": "spotify:track:2KH16WveTQWT6KOG9Rg6e2",
+        "URI_type": "song"
+    }, {
+        "tag_id": "0476613dbb2a81",
+        "spotify_URI": "spotify:playlist:091xDCj9U8mUKXxPNf3HzM",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "047c613dbb2a81",
+        "spotify_URI": "spotify:playlist:62j8RyjXIbB1A6w5ojTqvb",
+        "URI_type": "playlist"
     },
     {
         
-        "tag_id": "041c1e0c000001",
-        "spotify_URI": "spotify:playlist:7lm0xMLRiFr4vEa6kVBrae",
-        "URI_type": "playlist",
-        "vinyl_name": "flow state type beat"
+        "tag_id": "0492170c000001",
+        "spotify_URI": "spotify:track:1n8NKQRg8LVHy7oUhUgbFF",
+        "URI_type": "song"
+    }, {
+        "tag_id": "045c613dbb2a81",
+        "spotify_URI": "spotify:track:5xTtaWoae3wi06K5WfVUUH",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04d91d5fb62a81",
+        "spotify_URI": "spotify:track:5ihS6UUlyQAfmp48eSkxuQ",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04d71d5fb62a81",
+        "spotify_URI": "spotify:track:0i5QVxsK3IvEDbUjTA64Li",
+        "URI_type": "song"
+    }, {
+        "tag_id": "04e11d5fb62a81",
+        "spotify_URI": "spotify:track:1mMvahhW2Oz9waG8UTQnI4",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "047e190c000001",
+        "spotify_URI": "spotify:track:4dTaAiV9xFFCxnPur9c9yL",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04e31d5fb62a81",
+        "spotify_URI": "spotify:track:7apqOVW5Kor07ex1tC25sK",
+        "URI_type": "song"
+    }, {
+        "tag_id": "04d81d5fb62a81",
+        "spotify_URI": "spotify:track:53QF56cjZA9RTuuMZDrSA6",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04df1d5fb62a81",
+        "spotify_URI": "spotify:track:6F5c58TMEs1byxUstkzVeM",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04d21d5fb62a81",
+        "spotify_URI": "spotify:track:7m3povhdMDLZwuEKak0l0n",
+        "URI_type": "song"
+    }, {
+        "tag_id": "04eb1d5fb62a81",
+        "spotify_URI": "spotify:playlist:37i9dQZF1EIgwQ63EuQCPo",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "04d11d5fb62a81",
+        "spotify_URI": "spotify:track:5MTwfuYDZqRIEwOAamaT2I",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04cf1d5fb62a81",
+        "spotify_URI": "spotify:track:4Db1J3zjvfjOndOhHfcLrn",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "045b613dbb2a81",
+        "spotify_URI": "spotify:track:1SldN7GTd0ADTjspv96wCl",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0452613dbb2a81",
+        "spotify_URI": "spotify:playlist:0LNbTQAitd3o5Gzb4to5rf",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0486613dbb2a81",
+        "spotify_URI": "spotify:playlist:4OV5qWUZegX12GxsU5KWj7",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "045a613dbb2a81",
+        "spotify_URI": "spotify:track:3TgMcrV32NUKjEG2ujn9eh",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0454613dbb2a81",
+        "spotify_URI": "spotify:track:6sxptembJVty4sNtcPMAVz",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0453613dbb2a81",
+        "spotify_URI": "spotify:playlist:37i9dQZF1DWSqmBTGDYngZ",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0496613dbb2a81",
+        "spotify_URI": "spotify:playlist:37i9dQZF1EIgzSCNweQzPQ",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0497613dbb2a81",
+        "spotify_URI": "spotify:playlist:4bY1AAty6UEtWTqtATd0Ee",
+        "URI_type": "playlist"
+    },
+    {
+        "tag_id": "0495613dbb2a81",
+        "spotify_URI": "spotify:track:3XCpS4k8WqNnCpcDOSRRuz",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0498613dbb2a81",
+        "spotify_URI": "spotify:track:3AJwUDP919kvQ9QcozQPxg",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "044a613dbb2a81",
+        "spotify_URI": "spotify:track:6jSPbxZLd2yemJTjz2gqOT",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04da1d5fb62a81",
+        "spotify_URI": "spotify:track:39JofJHEtg8I4fSyo7Imft",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "0449613dbb2a81",
+        "spotify_URI": "spotify:track:7BqBn9nzAq8spo5e7cZ0dJ",
+        "URI_type": "song"
+    },
+    {
+        "tag_id": "04ce1d5fb62a81",
+        "spotify_URI": "spotify:track:5HuaHij4kVpfEVv93MYCeW",
+        "URI_type": "song"
     }
-
 ]
