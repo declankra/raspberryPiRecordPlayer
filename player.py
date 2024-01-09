@@ -121,12 +121,12 @@ def start_play(uri, access_token, device):
             'Authorization': f'Bearer {token}'
         }
         volume_response = requests.put(volume_endpoint, headers=volume_headers)
-        print("volume set")
-        return volume_response.status_code == 204
-    # Check and set volume
-    if not set_volume(100, preferred_device, access_token):
-        print("Failed to set volume")
-        return
+        if volume_response.status_code == 204:
+            print("volume set: SUCCESS")
+        elif volume_response.status_code > 204:
+            print("volume set: FAILED ")
+    #set volume
+    set_volume(69, preferred_device, access_token)
 
 def transfer_playback(access_token):
     device_id = choosen_device
