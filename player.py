@@ -112,18 +112,19 @@ def start_play(uri, access_token, device):
     elif shuffleStatus == False:
         shuffleModeOff(access_token) # ensure shuffle mode is off
     
-    get_playback_state(access_token)
+    #get_playback_state(access_token)
 
-    # Function to set the volume to 50%
+    # Function to set the volume to X%
     def set_volume(volume_percent, device_id, token):
         volume_endpoint = f'https://api.spotify.com/v1/me/player/volume?volume_percent={volume_percent}&device_id={device_id}'
         volume_headers = {
             'Authorization': f'Bearer {token}'
         }
         volume_response = requests.put(volume_endpoint, headers=volume_headers)
+        print("volume set")
         return volume_response.status_code == 204
     # Check and set volume
-    if not set_volume(50, preferred_device, access_token):
+    if not set_volume(100, preferred_device, access_token):
         print("Failed to set volume")
         return
 
