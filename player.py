@@ -228,8 +228,9 @@ def sound_settings(track_uri, track_type):
     #for state where nothing is playing (/me/player = 204)
     if current_playback_state is None:
         print("initiating sound")
-        start_play(track_uri, access_token, choosen_device_trimmed) # !!! ON TRIMMED AMZN ID
-        transfer_playback(access_token) # transfer to REAL
+        ##the following two lines are only required for echo dot 4
+        #start_play(track_uri, access_token, choosen_device_trimmed) # !!! ON TRIMMED AMZN ID
+        #transfer_playback(access_token) # transfer to REAL
         start_play(track_uri, access_token, choosen_device) # !!! ON REAL AMZN ID
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
