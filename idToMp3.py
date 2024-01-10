@@ -41,7 +41,7 @@ def get_vinyl_info(tag_id, vinyl_collection):
 
 
 def id_to_mp3(last_tag_id):
-    vinyl_collection = json.load(open('vinylCollection.json'))
+    vinyl_collection = json.load(open('/home/pi/raspberryPiRecordPlayer/vinylCollection.json')) #absolute path
     print("inside id_to_mp3()")
     tag_id = read_nfc_tag()  #use the read_nfc_tag function to get the tag ID
     if tag_id and tag_id != last_tag_id:
