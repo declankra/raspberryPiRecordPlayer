@@ -234,15 +234,18 @@ def sound_settings(track_uri, track_type):
         start_play(track_uri, access_token, choosen_device) # !!! ON REAL AMZN ID
     #for state where something is playing ( /me/player = 200) BUT device is NOT correct
     elif current_playback_state and current_playback_state.get('device') and current_playback_state['device']['id'] != choosen_device:
-        print("transferring playback before initiating sound")
-        transfer_playback(access_token)
+        ##print("transferring playback before initiating sound") #NO
         print("now hitting play")
         if track_type == 'song':
             print("type = song")
             play_song(track_uri, access_token)
+            print("now transferring playback")
+            transfer_playback(access_token)
         elif track_type == 'album' or track_type == 'playlist':
             print("type = album/playlist")
             play_context_uri(track_uri, access_token)
+            print("now transferring playback")
+            transfer_playback(access_token)
         else:
             print("new song requested has incorrect track_type")
     #for state where something is playing ( /me/player = 200) BUT device IS correct
