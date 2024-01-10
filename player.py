@@ -10,7 +10,7 @@ from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .p
 ####### ACCESS TOKEN AND REFRESH TOKEN MECHANISM ########
 
 # access tokens from 'tokens.json'
-TOKENS_FILE = 'tokens.json'
+TOKENS_FILE = '/home/pi/raspberryPiRecordPlayer/tokens.json' #absolute path
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_SECRET_ID')
 choosen_device = os.getenv('SPTOTIFY_CONNECTED_DEVICE_ID_REAL') #set preferred device id
