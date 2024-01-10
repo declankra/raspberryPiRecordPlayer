@@ -1,5 +1,5 @@
 # raspberryPiRecordPlayer
-tldr: A raspberry pi controlled spotify player connected to your spotify connect device
+**tldr**: a raspberry pi controlled spotify player connected to your spotify connect device
 
 !!! Visit notion page for project details and setup: https://www.notion.so/declankramper/raspberryPiRecordPlayer-bc59312559bd4569a0f717fc6efae722?pvs=4 
  
@@ -10,19 +10,19 @@ variation for playing through a sonos speaker: https://www.notion.so/declankramp
 
 **GENERAL OVERVIEW**
 
-**what**
+**what:**
 a “magic record player” device that plays music on a Spotify connected speaker when a song/playlist/album is placed on the record player
 
 **how does device work?**
 user places nfc tag on top of the reader → reader scans the id of the tag → python program will match the id with a spotify uri → make call to spotify api to play song on selected speaker
 
-**disclaimer**: in order for playback to work, the output device always has to be connected to Spotify i.e. showing up on ‘Spotify Connect’ devices
-    **how does that happen?**
+**disclaimer:** in order for playback to work, the output device always has to be connected to Spotify i.e. showing up on ‘Spotify Connect’ devices
+**how does that happen?**
     1. same wifi network
     2. device always stays “on/connected”
         or not, found work-around for amazon echo dot 4 device
 
-### SCRIPTs
+### scripts
 **authorize.py:** pre-work. uses manually provided spotify developer account credentials from .env  to get authorization code.
 
 **getTokens.py:** pre-work. uses authorization code and spotify credentials to recieve a refresh token. saves the response to a json file with necessary variables for refreshTokens.py to function.
@@ -40,7 +40,7 @@ user places nfc tag on top of the reader → reader scans the id of the tag → 
 **vinylCollection.json:** list of “records” with both tag ids and corresponding spotify uris. plus uri type.
 
 
-### Dependencies and downloads required for program
+### dependencies and downloads required for program
 - python3
     - `python3 —version:` Python 3.11.6
 - node.js
