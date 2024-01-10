@@ -50,7 +50,7 @@ def refresh_access_token(refresh_token):
         raise Exception("Could not refresh token", response.text)
 
 # Read the existing refresh token from tokens.json
-with open('tokens.json', 'r') as f:
+with open('/home/pi/raspberryPiRecordPlayer/tokens.json', 'r') as f: #absolute path
     token_data = json.load(f)
 
 # Refresh the access token using the existing refresh token
