@@ -39,7 +39,7 @@ def refresh_access_token(refresh_token):
             'scope': os.getenv('SPOTIFY_SCOPE')
         }
         
-        with open('tokens.json', 'w') as f:
+        with open('/home/pi/raspberryPiRecordPlayer/tokens.json', 'w') as f:
             json.dump(token_data, f, indent=4)
 
         print("New access token stored with expiration time.")
