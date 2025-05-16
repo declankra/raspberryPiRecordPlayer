@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/declankra/raspberryPiRecordPlayer/issues"
   },
-  "homepage": "https://github.com/declankra/raspberryPiRecordPlayer#readme"
+  "homepage": "https://github.com/declankra/raspberryPiRecordPlayer#readme",
+  "dependencies": {
+    "nfc-pcsc": "^0.8.1"
+  }
 }

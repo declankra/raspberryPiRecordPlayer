@@ -126,7 +126,7 @@ def start_play(uri, access_token, device):
         elif volume_response.status_code > 204:
             print("volume set: FAILED ")
     #set volume
-    set_volume(69, preferred_device, access_token)
+    set_volume(50, preferred_device, access_token)
 
 def transfer_playback(access_token):
     device_id = choosen_device
