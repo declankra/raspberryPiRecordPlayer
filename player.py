@@ -4,6 +4,11 @@ import json
 import base64
 import os
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv('/home/pi/raspberryPiRecordPlayer/.env')
+
 from refreshTokens import refresh_access_token # Import the refresh_access_token function from refreshTokens.py
 from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .py file to run in mainRun() function
 
@@ -70,8 +75,9 @@ def get_playback_state(access_token):
         print("500 server error")
         return None
     else:
-        print("Failed to get current playback state:", response.text)
-        return exit()
+        # Don't exit on transient errors - return None and let caller retry
+        print(f"Failed to get current playback state ({response.status_code}):", response.text)
+        return None
         
 #function to START playing uri on SPECIFIC device
 def start_play(uri, access_token, device):
@@ -126,7 +132,7 @@ def start_play(uri, access_token, device):
         elif volume_response.status_code > 204:
             print("volume set: FAILED ")
     #set volume
-    set_volume(50, preferred_device, access_token)
+    set_volume(35, preferred_device, access_token)
 
 def transfer_playback(access_token):
     device_id = choosen_device
@@ -281,7 +287,26 @@ def mainRun():
                 stop_music(access_token = get_access_token())
                 last_tag_id = None # set last tag id to the none tag id that was just used
         sleep(1)  # Sleep to prevent a tight loop
-try:
-    mainRun()
-except KeyboardInterrupt:
-    print("Program stopped by user.")
+if __name__ == "__main__":
+    consecutive_errors = 0
+    max_consecutive_errors = 10
+
+    while True:
+        try:
+            mainRun()
+        except KeyboardInterrupt:
+            print("Program stopped by user.")
+            break
+        except Exception as e:
+            consecutive_errors += 1
+            print(f"Error in main loop ({consecutive_errors}/{max_consecutive_errors}): {e}")
+
+            if consecutive_errors >= max_consecutive_errors:
+                print(f"Too many consecutive errors, waiting 30 seconds before retry...")
+                sleep(30)
+                consecutive_errors = 0
+            else:
+                sleep(5)  # Brief pause before retry
+
+            print("Restarting main loop...")
+            continue

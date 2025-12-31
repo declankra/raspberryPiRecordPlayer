@@ -5,6 +5,7 @@ from time import sleep
 # Function to read NFC tags with ACR122U reader.
 # The function should return the tag's unique ID with detailed print statements
 def read_nfc_tag():
+    process = None
     try:
         print("Starting NFC Tag read process...")
         # Run the Node.js script and capture its output
@@ -21,6 +22,10 @@ def read_nfc_tag():
             print("No NFC Tag ID found.")
             return None
     except subprocess.TimeoutExpired:
+        # CRITICAL: Kill the process to prevent zombie accumulation
+        if process:
+            process.kill()
+            process.wait()  # Reap the zombie process
         print("NFC Tag read process timed out.")
         return None
     except subprocess.CalledProcessError as e:
@@ -29,6 +34,11 @@ def read_nfc_tag():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return None
+    finally:
+        # Ensure process is cleaned up in all cases
+        if process and process.poll() is None:
+            process.kill()
+            process.wait()
 
 
 def get_vinyl_info(tag_id, vinyl_collection):
@@ -41,7 +51,9 @@ def get_vinyl_info(tag_id, vinyl_collection):
 
 
 def id_to_mp3(last_tag_id):
-    vinyl_collection = json.load(open('/home/pi/raspberryPiRecordPlayer/vinylCollection.json')) #absolute path
+    # Use context manager to prevent file descriptor leak (was causing crash after ~1 hour)
+    with open('/home/pi/raspberryPiRecordPlayer/vinylCollection.json') as f:
+        vinyl_collection = json.load(f)
     print("inside id_to_mp3()")
     tag_id = read_nfc_tag()  #use the read_nfc_tag function to get the tag ID
     if tag_id and tag_id != last_tag_id:

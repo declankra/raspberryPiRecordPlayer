@@ -1,0 +1,28 @@
+[Unit]
+Description=NFC Spotify Record Player
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/raspberryPiRecordPlayer
+Environment="PATH=/home/pi/.nvm/versions/node/v18.20.4/bin:/usr/local/bin:/usr/bin:/bin"
+EnvironmentFile=/home/pi/raspberryPiRecordPlayer/.env
+ExecStart=/usr/bin/python3 /home/pi/raspberryPiRecordPlayer/player.py
+Restart=always
+RestartSec=10
+
+# Ensure clean shutdown
+KillMode=mixed
+TimeoutStopSec=10
+
+# Resource limits to prevent runaway processes
+MemoryMax=256M
+CPUQuota=50%
+
+# Logging
+StandardOutput=append:/home/pi/raspberryPiRecordPlayer/logs/player.log
+StandardError=append:/home/pi/raspberryPiRecordPlayer/logs/player-error.log
+
+[Install]
+WantedBy=multi-user.target
