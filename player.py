@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv('/home/pi/raspberryPiRecordPlayer/.env')
 
 from refreshTokens import refresh_access_token # Import the refresh_access_token function from refreshTokens.py
-from idToMp3 import id_to_mp3 # import the main function id_to_mp3 from other .py file to run in mainRun() function
+from idToMp3 import id_to_mp3, get_nfc_reader # import the main function id_to_mp3 from other .py file to run in mainRun() function
 
 ####### ACCESS TOKEN AND REFRESH TOKEN MECHANISM ########
 
@@ -79,9 +79,30 @@ def get_playback_state(access_token):
         print(f"Failed to get current playback state ({response.status_code}):", response.text)
         return None
         
+# Function to wake up a Spotify device before playing
+# Echo devices often go to sleep and need to be woken up first
+def wake_device(access_token, device_id):
+    print(f"Waking up device: {device_id}")
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    # Transfer playback to device without starting play - this wakes it up
+    response = requests.put(
+        'https://api.spotify.com/v1/me/player',
+        headers=headers,
+        json={'device_ids': [device_id], 'play': False}
+    )
+    if response.status_code == 204:
+        print("Device woken up successfully")
+        return True
+    else:
+        print(f"Failed to wake device: {response.status_code} - {response.text}")
+        return False
+
 #function to START playing uri on SPECIFIC device
 def start_play(uri, access_token, device):
-    
+
     shuffleStatus = False # initiate shuffle status
     preferred_device=device
     print("device type = " + preferred_device)
@@ -89,7 +110,10 @@ def start_play(uri, access_token, device):
             'Authorization': f'Bearer {access_token}',
             'Content-Type': 'application/json'
         }
-    
+
+    # Wake up the device first (Echo devices often sleep)
+    wake_device(access_token, preferred_device)
+
     if 'track' in uri:
         track_type = "song"
         print("uri type = " + track_type)
@@ -103,7 +127,7 @@ def start_play(uri, access_token, device):
     else:
         print("URI type not recognized")
         return
-    
+
     # make request to /player/play/ with device id
     response = requests.put(f'https://api.spotify.com/v1/me/player/play?device_id={preferred_device}', headers=headers, json=data)
     if response.status_code == 204:
@@ -291,22 +315,33 @@ if __name__ == "__main__":
     consecutive_errors = 0
     max_consecutive_errors = 10
 
-    while True:
-        try:
-            mainRun()
-        except KeyboardInterrupt:
-            print("Program stopped by user.")
-            break
-        except Exception as e:
-            consecutive_errors += 1
-            print(f"Error in main loop ({consecutive_errors}/{max_consecutive_errors}): {e}")
+    # Initialize the NFC reader at startup
+    print("Initializing persistent NFC reader...")
+    reader = get_nfc_reader()
+    print("NFC reader initialized, starting main loop...")
 
-            if consecutive_errors >= max_consecutive_errors:
-                print(f"Too many consecutive errors, waiting 30 seconds before retry...")
-                sleep(30)
-                consecutive_errors = 0
-            else:
-                sleep(5)  # Brief pause before retry
+    try:
+        while True:
+            try:
+                mainRun()
+            except KeyboardInterrupt:
+                print("Program stopped by user.")
+                break
+            except Exception as e:
+                consecutive_errors += 1
+                print(f"Error in main loop ({consecutive_errors}/{max_consecutive_errors}): {e}")
 
-            print("Restarting main loop...")
-            continue
+                if consecutive_errors >= max_consecutive_errors:
+                    print(f"Too many consecutive errors, waiting 30 seconds before retry...")
+                    sleep(30)
+                    consecutive_errors = 0
+                else:
+                    sleep(5)  # Brief pause before retry
+
+                print("Restarting main loop...")
+                continue
+    finally:
+        # Clean up the NFC reader on exit
+        print("Shutting down NFC reader...")
+        reader.stop()
+        print("Cleanup complete.")
